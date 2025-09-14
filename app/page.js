@@ -1,4 +1,6 @@
 import Link from "next/link";
+import MyCustomLinks from "./_components/my-custom-links";
+import { ASSIGNMENT_LIST } from "./lib/constants";
 
 export default function Home() {
   return (
@@ -16,10 +18,15 @@ export default function Home() {
 
         <div className="">
           <h2 className="text-lg mb-2">Assignments</h2>
-            <ul className="list-disc list-inside mt-4">
-              <li className="mb-1"><Link className="nav-link" href="/week-2">Week 2 Assignment</Link></li>
-              <li className="mb-1"><Link className="nav-link" href="/week-3">Week 3 Assignment</Link></li>
-              <li className="mb-1"><Link className="nav-link" href="/week-4">Week 4 Assignment</Link></li>
+            <ul className="list-disc mt-4 ml-10">
+              {
+                ASSIGNMENT_LIST.map((assignment, index) => (
+                  <li key={index}>
+                    <MyCustomLinks name={assignment.displayName} path={assignment.path} fallbackURL={assignment.fallbackURL} />
+                  </li>
+                ))
+              }
+            
             </ul>
         </div>
 
