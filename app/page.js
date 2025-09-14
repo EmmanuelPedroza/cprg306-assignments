@@ -18,6 +18,8 @@ export default function Home() {
           <h2 className="text-lg mb-2">Assignments</h2>
             <ul className="list-disc list-inside mt-4">
               <li className="mb-1"><Link className="nav-link" href="/week-2">Week 2 Assignment</Link></li>
+              <li className="mb-1"><Link className="nav-link" href="/week-3">Week 3 Assignment</Link></li>
+              <li className="mb-1"><Link className="nav-link" href="/week-4">Week 4 Assignment</Link></li>
             </ul>
         </div>
 
