@@ -9,12 +9,28 @@ export const metadata = {
 export default function Page() {
     return (
         <div>
-            <MyBackButton />
-            <h1>Week 3 - Assignment</h1>
-            <hr className="border mt-4 mb-4"/>
+            <MyBackButton pageTitle="Week 3 - Assignment"/>
             <br/>
-            <h1>Shopping List</h1>
-            <ItemList />
+            <div className="p-10">
+                <div className="flex flex-col lg:flex-row gap-10">
+                    <div className="basis-3/6 justify-items-center">
+                        <h1 className="text-xl">Shopping List</h1>
+                        <ItemList />
+                    </div>
+                    <div className="hidden lg:block border w-1 border-gray-300"></div>
+                    <div className="basis-3/6 mt-10 lg:mt-0 justify-items-center">
+                        <h1 className="text-xl">Learnings from this Assignment</h1>
+                        <ul className="list-disc mt-5 ml-10">
+                            <li className="mb-3">Refreshed my knowledge on handling <span className="font-bold underline underline-offset-4">objects</span> and <span className="font-bold underline underline-offset-4">arrays</span> in JavaScript.</li>
+                            <li className="mb-3">Refreshed my knowledge on using flex property in vanilla css.</li>
+                            <li className="mb-3">Learned about layout utilities in Tailwind CSS, such as <span className="font-bold underline underline-offset-4">grid</span> and <span className="font-bold underline underline-offset-4">flex</span> utilities.</li>
+                        </ul>
+                    </div>
+
+                </div>
+                
+            </div>
+
         </div>
 
     );

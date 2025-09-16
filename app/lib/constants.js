@@ -14,3 +14,18 @@ export const ASSIGNMENT_LIST = [
     {displayName: "Week 14 Assignment", path: "/week-14", fallbackURL: "https://webdev2-tau.vercel.app/week-14/assignment"},
     {displayName: "Week 15 Assignment", path: "/week-15", fallbackURL: "https://webdev2-tau.vercel.app/week-15/assignment"}
 ]
+
+
+export const ITEM_CATEGORIES = [
+    "Produce", 
+    "Dairy", 
+    "Bakery", 
+    "Meat", 
+    "Frozen Foods", 
+    "Canned Goods", 
+    "Dry Goods", 
+    "Beverages", 
+    "Snacks", 
+    "Household", 
+    "Other"
+];

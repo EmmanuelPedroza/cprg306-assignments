@@ -42,5 +42,6 @@ body {
 
 
 .nav-link {
-  @apply shadow hover:underline underline-offset-4;
+  @apply shadow hover:underline underline-offset-4 text-blue-300;
 }
+

@@ -76,7 +76,7 @@ export default function ItemList() {
     const arrayOfItems = [item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12];
     
     return (
-        <div className="container">
+        <div className="container justify-items-center">
             <ul className="m-4">
             {arrayOfItems.map((item, index) => (
                 <li className="list-disc mb-2" key={index}>
