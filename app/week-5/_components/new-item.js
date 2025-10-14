@@ -9,7 +9,7 @@ const NewItem = () => {
     const catergories = ITEM_CATEGORIES;
     const [selectedOption, setSelectedOption] = useState(catergories[0]);
     const [itemName, setItemName] = useState("");
-    
+
     const handleSubmit = (e) => {
         e.preventDefault();
         alert(`Item Name: ${itemName}\nItem Quantity: ${count}\nItem Category: ${selectedOption}`);
@@ -17,17 +17,30 @@ const NewItem = () => {
         setCount(0);
         setSelectedOption(catergories[0]);
     };
-     function handleClickOutside(event) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
             setIsOpen(false);
-            }
         }
+    };
+
+    const handleDecrement = (e) => {
+        e.preventDefault();
+        setCount(count == 1 ? count : count - 1);
+    }
+
+    const handleIncrement = (e) => {
+        e.preventDefault();
+        setCount(count == 20 ? count : count + 1);
+    }
+
+    
 
     useEffect(() => {
         if (isOpen) {
             document.addEventListener("mousedown", handleClickOutside);
         }
-        
+
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
@@ -45,13 +58,13 @@ const NewItem = () => {
                         <label className="mr-3">Item Name:</label>
                         <input required className="border-b px-2 focus:border-0" type="text" value={itemName} onChange={(e) => setItemName(e.target.value)} />
                     </div>
-                    
+
                     <div className="mt-5 ml-5 mr-5">
                         <label className="mr-3">Item Quantity:</label>
-                        <button className="border-1 px-2 hover:bg-white hover:text-black" onClick={() => setCount(count == 1 ? count : count - 1)}>-</button>
+                        <button type="button" className="border-1 px-2 hover:bg-white hover:text-black" onClick={(e) => handleDecrement(e)}>-</button>
                         <span className="mx-2">{count}</span>
-                        <button className="border-1 px-2 hover:bg-white hover:text-black" onClick={() => setCount(count == 20 ? count : count + 1)}>+</button>
-                        <hr className="invisible"/>
+                        <button type="button" className="border-1 px-2 hover:bg-white hover:text-black" onClick={(e) => handleIncrement(e)}>+</button>
+                        <hr className="invisible" />
                         <span className="text-sm text-gray-400">
                             (Min: 1, Max: 20)
                         </span>
