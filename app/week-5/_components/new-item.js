@@ -48,7 +48,7 @@ const NewItem = () => {
 
     return (
         <div className="container p-10">
-            <div className="border rounded-lg py-5 bg-gray-800 text-white w-fit px-20 justify-self-center">
+            <div className="border rounded-lg py-5 bg-gray-800 text-white w-fit px-5 mx-5 justify-self-center">
                 <form onSubmit={handleSubmit}>
 
 
@@ -121,9 +121,9 @@ const NewItem = () => {
                 </form>
             </div>
 
-            <div className="border rounded-lg py-5 bg-gray-800 text-white w-fit px-20 justify-self-center mt-20">
+            <div className="border rounded-lg py-5 bg-gray-800 text-white w-fit px-5 justify-self-center mt-20">
                 <h1 className="text-lg">New Item Summary</h1>
-                <div className="mt-5 ml-5 mr-5">
+                <div className="mt-5 ml-5 mr-5 ">
                     <p>Item Name: {itemName}</p>
                     <p>Item Quantity: {count}</p>
                     <p>Item Category: {selectedOption}</p>

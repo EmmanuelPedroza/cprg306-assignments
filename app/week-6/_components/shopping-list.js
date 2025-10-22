@@ -20,11 +20,11 @@ const ShoppingList = () => {
 
 
     return (
-        <div className="container p-10">
+        <div className="container sm:p-3 md:p-3 lg:p-10">
             <h1 className="text-lg">Shopping List</h1>
             <div className="m-5 flex flex-col-reverse lg:flex-row items-center">
-                
-                <div className="container mt-5 basis-1/2 bg-gray-800 border rounded-lg w-fit py-8 px-10">
+
+                <div className="container mt-5 basis-1/2 bg-gray-800 border rounded-lg lg:w-fit py-8 px-10">
                     {shoppingList.map((item) => (
                         <ShoppingItem {...item} key={item.id} />
                     ))}
