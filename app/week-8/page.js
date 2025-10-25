@@ -1,0 +1,95 @@
+
+"use client";
+
+import MyBackButton from "../_components/my-back-button";
+import { SHOPPING_LIST } from "../lib/constants";
+import { useCallback, useState, useRef } from "react";
+import List from "./_components/list";
+import Form from "./_components/form";
+import { getRecipesBySingleIngredient } from "../lib/api-actions";
+import RecipeList from "./_components/recipet-list";
+
+const Page = () => {
+    const [shoppingList, setShoppingList] = useState(SHOPPING_LIST);
+    const [selectedItemIds, setSelectedItemIds] = useState([]);
+    const [recipeList, setRecipeList] = useState([]);
+
+    const listCompRef = useRef(null);
+    const handleButtonClick = () => {
+        const ids = listCompRef.current?.getSelectedItemIds() ?? [];
+        console.log('Selected ids on demand (via ref):', ids);
+
+        let ingredientNames = getShoppingListNamesAccordingToIds(ids);
+
+        console.log(ingredientNames);
+
+        // return;
+
+        if (ids.length === 0) {
+            console.warn("No items selected.");
+            return;
+        }
+
+        if (ids.length === 1) {
+            getRecipesBySingleIngredient(ingredientNames[0]).then(recipes => {
+                console.log("Fetched recipes with chicken_breast:", recipes);
+                setRecipeList(recipes ?? []);
+            }).catch(error => {
+                console.error("Error fetching recipes:", error);
+            });
+        } else {
+            // maybe add some https://api-ninjas.com/api/recipes call for multiple ingredients?
+        }
+    };
+
+    const getShoppingListNamesAccordingToIds = (ids) => {
+        return shoppingList
+            .filter(item => ids.includes(item.id))
+            .map(item => item.name.split(',')[0].toLowerCase().trim())
+            .map(name => 
+                name
+                    // .includes(',') == true ? item.name.split(',')[0] : item.name
+                    // .toLowerCase()
+                    .replace(/[^a-zA-Z0-9\s]/g, '') // Remove most symbols and non-alphanumeric
+                    .replace(/\p{Emoji_Presentation}/gu, '')
+                    .trim('')
+                    .replace(/\s+/g, '_') // Replace spaces with underscores
+            );
+    };
+
+    const formCallback = useCallback(newItem => setShoppingList(prev => [...prev, newItem]), []);
+
+    // const listProps = {
+    //     selectedItemIds: selectedItemIds,
+    //     setSelectedItemIds: setSelectedItemIds
+    // };
+
+    // const selectedItemsCallback = useCallback(ids => setSelectedItemIds(ids), []);
+
+   
+
+    return (
+        <div className="container">
+            <MyBackButton pageTitle="Week 8 - Assignment" />
+
+            <h1 className="text-xl">
+                Fetching Data from an API
+            </h1>
+
+            <Form onSubmit={formCallback} />
+
+            <List items={shoppingList} ref={listCompRef} />
+
+
+            <button onClick={handleButtonClick} className="mt-10 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+                Get Selected IDs
+            </button>
+
+            <RecipeList recipes={recipeList} />
+        </div>
+
+    );
+
+};
+
+export default Page;
