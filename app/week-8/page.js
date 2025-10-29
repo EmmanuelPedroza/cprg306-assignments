@@ -6,13 +6,14 @@ import { SHOPPING_LIST } from "../lib/constants";
 import { useCallback, useState, useRef } from "react";
 import List from "./_components/list";
 import Form from "./_components/form";
-import { getRecipesBySingleIngredient } from "../lib/api-actions";
+import { getRecipesBySingleIngredient, getRecipesByMultipleIngredients } from "../lib/api-actions";
 import RecipeList from "./_components/recipet-list";
 
 const Page = () => {
     const [shoppingList, setShoppingList] = useState(SHOPPING_LIST);
     const [selectedItemIds, setSelectedItemIds] = useState([]);
     const [recipeList, setRecipeList] = useState([]);
+    const [spoonacularAPIFlag, setSpoonacularAPIFlag] = useState(false);
 
     const listCompRef = useRef(null);
     const handleButtonClick = () => {
@@ -37,8 +38,15 @@ const Page = () => {
             }).catch(error => {
                 console.error("Error fetching recipes:", error);
             });
+            setSpoonacularAPIFlag(false);
         } else {
-            // maybe add some https://api-ninjas.com/api/recipes call for multiple ingredients?
+            getRecipesByMultipleIngredients(ingredientNames).then(recipes => {
+                console.log("Fetched recipes with multiple ingredients:", recipes);
+                setRecipeList(recipes ?? []);
+            }).catch(error => {
+                console.error("Error fetching recipes:", error);
+            });
+            setSpoonacularAPIFlag(true);
         }
     };
 
@@ -85,7 +93,18 @@ const Page = () => {
                 Get Selected IDs
             </button>
 
-            <RecipeList recipes={recipeList} />
+            <RecipeList recipes={recipeList} spoonacularAPIFlag={spoonacularAPIFlag} />
+
+             
+            <div className="mt-10 p-5 border rounded-lg bg-gray-800 text-white">
+                <h1 className="text-lg font-bold mb-3">Learnings:</h1>
+                <ul className="list-disc list-inside">
+                    <li>Understanding how to fetch data from external APIs using async functions and Promises.</li>
+                    <li>Managing component state to handle loading, success, and error states during data fetching.</li>
+                    <li>Implementing user interactions to trigger API calls and update the UI based on the fetched data.</li>
+                    <li>Handling multiple selections and dynamically constructing API requests based on user input.</li>
+                </ul>
+            </div>
         </div>
 
     );
