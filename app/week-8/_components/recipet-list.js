@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getRecipeById } from '../../lib/api-actions';
+import RecipeItem from './recipe-item';
 
 const RecipeList = ({ recipes = [], spoonacularAPIFlag}) => {
     const [pageRecipes, setPageRecipes] = useState([]);
@@ -9,13 +10,15 @@ const RecipeList = ({ recipes = [], spoonacularAPIFlag}) => {
     const totalPages = Math.max(1, Math.ceil(recipes.length / itemsPerPage));
     
     useEffect(() => {
-        // ? = (1|2|3 -1) *10   ::  3-1 * 10 = 20
-        const startIndex = (pageNumber - 1) * itemsPerPage;
-        // ? = 0|10|20  + 10 
-        const endIndex = startIndex + itemsPerPage;
-        setPageRecipes(recipes.slice(startIndex, endIndex));
+        getCurrentPageRecipes();
 
     }, [pageNumber, itemsPerPage, recipes]);
+
+    const getCurrentPageRecipes = () => {
+        const startIndex = (pageNumber - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        setPageRecipes(recipes.slice(startIndex, endIndex));
+    }
 
     // fetch details (ingredients, measures) for the recipes on the current page
     useEffect(() => {
@@ -54,24 +57,25 @@ const RecipeList = ({ recipes = [], spoonacularAPIFlag}) => {
 
     // clamp pageNumber when recipes or itemsPerPage change
     useEffect(() => {
+        setPageLimits();
+    }, [recipes, itemsPerPage, totalPages, pageNumber]);
+
+    const setPageLimits = () => {
         if (pageNumber > totalPages) {
             setPageNumber(totalPages);
         }
         if (pageNumber < 1 && totalPages >= 1) {
             setPageNumber(1);   
         }
-    }, [recipes, itemsPerPage, totalPages, pageNumber]);
+    }
 
     const goToPage = (targetPage) => {
         const p = Math.max(1, Math.min(totalPages, Number(targetPage) || 1));
         setPageNumber(p);
     }
-
     const prevPage = () => goToPage(pageNumber - 1);
     const nextPage = () => goToPage(pageNumber + 1);
-
-    console.log("RecipeList:: pageRecipes:", pageRecipes);
-
+    
     return (
         <div className="container mt-5 p-5 border rounded-lg bg-gray-800 text-white">
             <h1 className="text-2xl font-bold">Recipe List Component</h1>
@@ -117,12 +121,7 @@ const RecipeList = ({ recipes = [], spoonacularAPIFlag}) => {
                     <p className="mt-5">No recipes available.</p>
                 ) : (
                     pageRecipes.map((recipe, idx) => {
-                        
-                        
                         const detail = pageDetails[idx] || null;
-                        console.log("idx: ",idx)
-                        console.log("pageDetails: ",pageDetails[idx])
-                        // console.log("RecipeList:: rendering recipe detail:", detail);
                         const ingredients = [];
                         console.log("spoonacularAPIFlag:", spoonacularAPIFlag);
                         if(!spoonacularAPIFlag){ 
@@ -139,37 +138,25 @@ const RecipeList = ({ recipes = [], spoonacularAPIFlag}) => {
                             }
 
                         } else {
-                            console.log("spoon missedIngredients", recipe.missedIngredients);
-                            console.log("spoon usedIngredients", recipe.usedIngredients);
-                            recipe.usedIngredients.forEach((ing) => {
-                                const measure = ing.amount ? `${ing.amount} ${ing.unit} ` : "";
-                                const text = `${measure}${ing.name}, `;
-                                ingredients.push(text);
-                            });
-                            recipe.missedIngredients.forEach((ing) => {
-                                const measure = ing.amount ? `${ing.amount} ${ing.unit} ` : "";
-                                const text = `${measure}${ing.name}, `;
-                                ingredients.push(text);
-                            });
-                            
+                            if (recipe.hasOwnProperty('usedIngredients')) {
+                                recipe.usedIngredients.forEach((ing) => {
+                                    const measure = ing.amount ? `${ing.amount} ${ing.unit} ` : "";
+                                    const text = `${measure}${ing.name}, `;
+                                    ingredients.push(text);
+                                });
+                            }
+
+                            if (recipe.hasOwnProperty('missedIngredients')) {
+                                recipe.missedIngredients.forEach((ing) => {
+                                    const measure = ing.amount ? `${ing.amount} ${ing.unit} ` : "";
+                                    const text = `${measure}${ing.name}, `;
+                                    ingredients.push(text);
+                                });
+                            }
                         }
 
                         return (
-                            <div key={recipe.idMeal ?? recipe.strMeal} className="border rounded-lg p-4 bg-gray-700">
-                                <h2 className="text-xl font-semibold mb-2">{recipe.strMeal}</h2>
-                                <img src={recipe.strMealThumb} alt={recipe.strMeal} className="w-full h-48 object-cover rounded-md mb-2" />
-                                {detail === null && pageDetails.length === 0 ? (
-                                    <p className="text-sm text-gray-400">Loading ingredients...</p>
-                                ) : (
-                                    ingredients.length > 0 && (
-                                        <ul className="mt-3 text-sm list-disc list-inside text-gray-200">
-                                            {ingredients.map((it, i) => (
-                                                <li key={i}>{it}</li>
-                                            ))}
-                                        </ul>
-                                    )
-                                )}
-                            </div>
+                            <RecipeItem key={recipe.idMeal ?? recipe.strMeal} recipe={recipe} ingredients={ingredients} />
                         );
                     })
                 )}
